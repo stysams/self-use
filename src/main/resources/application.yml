@@ -1,0 +1,28 @@
+server:
+  port: 8000
+spring:
+  #mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.31.20:3306/y7kp-self?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+  cache:
+    type: redis
+    redis:
+      time-to-live: 10000
+      cache-null-values: on
+  #redission
+  data:
+    redis:
+      host: 192.168.31.20
+      port: 6379
+      password: root
+      database: 0
+      timeout: 10000
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1
+          max-idle: 8
+          min-idle: 0
