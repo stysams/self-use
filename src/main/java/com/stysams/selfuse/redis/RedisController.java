@@ -1,10 +1,12 @@
 package com.stysams.selfuse.redis;
 
-import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.stysams.selfuse.redis.bloom.service.BloomFilterService;
 import com.stysams.selfuse.redis.cache.service.StorageService;
 import com.stysams.selfuse.redis.push.constant.RedisTopicConstant;
 import com.stysams.selfuse.redis.push.listener.RedisTopicListener1;
+import jakarta.annotation.PostConstruct;
+import org.redisson.api.RBloomFilter;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +73,25 @@ public class RedisController {
         RTopic topic = redissonClient.getTopic(RedisTopicConstant.TEST_REDIS_TOPIC_01.getCode());
         topic.removeListener(redisTopicListener1);
     }
+
+    @Autowired
+    private BloomFilterService bloomFilterService;
+
+    public static RBloomFilter<String> bloom;
+    @PostConstruct
+    public void init(){
+        bloom = bloomFilterService.createBloom("test-bloom");
+    }
+
+    @GetMapping("setBloom")
+    public void setBloomFilterService(String id){
+        bloom.add(id);
+    }
+    @GetMapping("getBloom")
+    public void getBloomExist(String id){
+        System.out.println(bloom.contains(id));
+    }
+
 
 
 }

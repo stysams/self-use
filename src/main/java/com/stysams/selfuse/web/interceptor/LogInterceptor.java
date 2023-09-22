@@ -1,23 +1,18 @@
-package com.dsfa.platform.starter.web.interceptor;
+package com.stysams.selfuse.web.interceptor;
 
-import com.dsfa.platform.sdk.common.kit.StrKit;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.ThreadContext;
+import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 import java.util.UUID;
 
-/**
- * @ClassName LogInterceptor
- * @Author 文进
- * @Date 2020/7/16 下午6:43
- * @Version 1.0.0
- * @Description TODO
- **/
 @Slf4j
 public class LogInterceptor implements HandlerInterceptor {
 
@@ -27,7 +22,7 @@ public class LogInterceptor implements HandlerInterceptor {
 
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         if (!(handler instanceof HandlerMethod)) {
             //非接口请求
             return true;
@@ -36,16 +31,15 @@ public class LogInterceptor implements HandlerInterceptor {
         startThreadLocal.set(new Common(System.currentTimeMillis(), uuid));
         ThreadContext.put("_log_id",uuid);
         String methodName = ((HandlerMethod) handler).getMethod().getName();
-        Class controller = ((HandlerMethod) handler).getBean().getClass();
+        Class<?> controller = ((HandlerMethod) handler).getBean().getClass();
         String queryStr = request.getQueryString();
-        StringBuffer sb = new StringBuffer("----------------------\tDSF-SPRINGBOOT " + uuid + " start\t--------------------\n\n");
-        sb.append("\tUrl         : " + request.getRequestURL().toString());
-        if (StrKit.isNotBlank(queryStr)) {
+        StringBuilder sb = new StringBuilder("----------------------\tDSF-SPRINGBOOT " + uuid + " start\t--------------------\n\n");
+        sb.append("\tUrl         : ").append(request.getRequestURL().toString());
+        if (StringUtils.hasText(queryStr)) {
             sb.append("?").append(queryStr);
         }
         sb.append("\n")
-                .append("\tController  : ").append(controller.getName()).append(".(").append(controller.getSimpleName()).append(".java:1)").append("\n")
-                .append("\tMethod      : " + methodName).append("\n");
+                .append("\tController  : ").append(controller.getName()).append(".(").append(controller.getSimpleName()).append(".java:1)").append("\n").append("\tMethod      : ").append(methodName).append("\n");
         Enumeration<String> e = request.getParameterNames();
         if (e.hasMoreElements()) {
             sb.append("\tParameter   : ");
@@ -73,40 +67,34 @@ public class LogInterceptor implements HandlerInterceptor {
             }
             sb.append("\n");
         }
-        log.debug(sb.toString());
+        log.info(sb.toString());
         return true;
     }
 
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) throws Exception {
         if (!(handler instanceof HandlerMethod)) {
             //非接口请求
             return;
         }
         Common common = startThreadLocal.get();
         if(common != null) {
-            log.debug("总执行时间" + (System.currentTimeMillis() - common.getStart()) + "ms");
-            log.debug("----------------------\tDSF-SPRINGBOOT " + common.getUuid() + " end\t\t--------------------\n");
+            log.info("总执行时间" + (System.currentTimeMillis() - common.getStart()) + "ms");
+            log.info("----------------------\tDSF-SPRINGBOOT " + common.getUuid() + " end\t\t--------------------\n");
             startThreadLocal.remove();
         }
     }
 
-    private class Common {
-        private long start;
-        private String uuid;
+    @Getter
+    private static class Common {
+        private final long start;
+        private final String uuid;
 
         public Common(long start, String uuid) {
             this.start = start;
             this.uuid = uuid;
         }
 
-        public long getStart() {
-            return start;
-        }
-
-        public String getUuid() {
-            return uuid;
-        }
     }
 }
