@@ -6,7 +6,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 // 启用 AOP
 @EnableAspectJAutoProxy
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.configuration"})
+//@SpringBootApplication
+
 public class SelfUseApplication {
 
     public static void main(String[] args) {
