@@ -1,6 +1,6 @@
 package com.stysams.selfuse;
 
-import com.configuration.TestSelfStarter;
+import com.stysa.configuration.TestSelfStarter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 @EnableAspectJAutoProxy
 //@SpringBootApplication(scanBasePackages = {"com.configuration"})
 @SpringBootApplication
-//@Import(TestSelfStarter.class)
+@Import(TestSelfStarter.class)
 public class SelfUseApplication {
 
     public static void main(String[] args) {

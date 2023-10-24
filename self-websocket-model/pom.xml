@@ -11,12 +11,13 @@
     <groupId>com.stysams</groupId>
     <artifactId>self-websocket-model</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>self-user-model</name>
-    <description>self-user-model</description>
+    <name>self-websocket-model</name>
+    <description>self-websocket-model</description>
     <properties>
         <java.version>20</java.version>
     </properties>
     <dependencies>
+        <!--spring 依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -32,6 +33,16 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
+        </dependency>
+    <!--  spring-boot-starter-websocket  -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+    <!--    lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 

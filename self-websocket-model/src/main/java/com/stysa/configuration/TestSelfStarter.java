@@ -1,4 +1,4 @@
-package com.configuration;
+package com.stysa.configuration;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @author StysaMS
  */
-@ComponentScan({"com.configuration","com.stysa"})
+@ComponentScan({"com.stysa"})
 @Configuration
 @EnableConfigurationProperties(TestSlefConfig.class)
 public class TestSelfStarter {

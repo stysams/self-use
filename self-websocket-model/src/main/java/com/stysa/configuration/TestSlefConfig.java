@@ -1,4 +1,4 @@
-package com.configuration;
+package com.stysa.configuration;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
