@@ -89,7 +89,7 @@
         </dependency>
         <dependency>
             <groupId>com.stysams</groupId>
-            <artifactId>self-user-model</artifactId>
+            <artifactId>self-websocket-model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

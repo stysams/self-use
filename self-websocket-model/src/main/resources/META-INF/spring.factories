@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.ImportAutoConfigurationImportSelector=\
+com.configuration.TestSelfStarter
