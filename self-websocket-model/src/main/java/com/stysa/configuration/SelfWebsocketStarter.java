@@ -1,6 +1,5 @@
 package com.stysa.configuration;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,8 +8,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @ComponentScan({"com.stysa"})
 @Configuration
-@EnableConfigurationProperties(TestSlefConfig.class)
-public class TestSelfStarter {
+public class SelfWebsocketStarter {
 
     ////@Autowired
     ////private

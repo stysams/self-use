@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.ImportAutoConfigurationImportSelector=\
-com.stysa.configuration.TestSelfStarter
+com.stysa.configuration.SelfWebsocketStarter
