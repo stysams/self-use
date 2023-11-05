@@ -5,7 +5,9 @@
 <configuration status="ALL" monitorInterval="30">
 
     <Properties>
-        <Property name="pattern">[%X{traceId}] %d{yyyy-MM-dd HH:mm:ss,SSS} %t %level %C:%M() %m%n</Property>
+        <Property name="pattern">%d{yyyy-MM-dd HH:mm:ss,SSS} %t %level %C:%M() %m%n</Property>
+        <Property name="displayName">web</Property>
+        <Property name="logstash">%m%n</Property>
     </Properties>
     <!--先定义所有的appender-->
     <appenders>
@@ -31,8 +33,8 @@
             然后调用LogManager.shutdown()输出缓冲区中的日志。 -->
         <!--<RollingRandomAccessFile   name="RollingFile" fileName="${sys:user.home}/logs/info.log"-->
         <RollingFile  name="RollingFile" fileName="${sys:user.home}/logs/info.log"
-                     filePattern="${sys:user.home}/logs/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log"
-                     immediateflush="true">
+                      filePattern="${sys:user.home}/logs/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log"
+                      immediateflush="true">
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）
                     DENY，日志将立即被抛弃不再经过其他过滤器；NEUTRAL，有序列表里的下个过滤器过接着处理日志；
                     ACCEPT，日志会被立即处理，不再经过剩余过滤器-->
@@ -49,7 +51,7 @@
             <Policies>
                 <!--interval属性用来指定多久滚动一次，默认是1 hour-->
                 <TimeBasedTriggeringPolicy interval="1"/>
-                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <SizeBasedTriggeringPolicy size="10 KB"/>
             </Policies>
             <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
             <DefaultRolloverStrategy max="20"/>
@@ -75,17 +77,30 @@
     <!--Logger节点用来单独指定日志的形式，比如要为指定包下的class指定不同的日志级别等。-->
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <loggers>
-        <!--root和AsyncRoot不能同时出现，原因未知-->
-        <logger name="org.springframework" level="info"></logger>
-        <!--<AsyncLogger name="org.springframework" level="info" />-->
-        <!--<AsyncLogger name="org.springframework" level="debug">-->
-        <!--    <AppenderRef ref="RollingFile" />-->
-        <!--</AsyncLogger>-->
+        !--监控系统信息-->
+        <!--若是additivity设为false，则 子Logger 只会在自己的appender里输出，而不会在 父Logger 的appender里输出。-->
+        <!--<Logger name="org.springframework" level="info" additivity="false">-->
+        <!--    <AppenderRef ref="Console"/>-->
+        <!--</Logger>-->
+        <!--Console日志是同步、阻塞的，推荐只在本地调试时使用，线上将该配置去掉-->
+        <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
+        <logger name="org.springframework" level="debug"></logger>
+        <logger name="org.mybatis" level="INFO"></logger>
         <root level="all">
             <appender-ref ref="Console"/>
+            <!--<appender-ref ref="log"/>-->
+            <!--<AsyncAppender ref="Async"/>-->
+            <!--<appender-ref ref="RollingFile"/>-->
         </root>
-        <!--<AsyncRoot level="debug" includeLocation="true">-->
-        <!--    <AppenderRef ref="RollingFile" />-->
-        <!--</AsyncRoot>-->
+        <!--若是 additivity 设为 false，则子 Logger 只会在自己的 appender 里输出，而不会在父 Logger 的 appender 里输出。-->
+        <!--Console、RollingFileInfo 没有配置 ThresholdFilter，默认走的是 AsyncRoot 的 level 级别，
+            com.songo.mapper 为我项目 mapper 的包路径，级别设为 debug，可以打印 sql 语句-->
+        <!--<AsyncLogger name="com.songo.mapper" level="debug" additivity="false">-->
+        <!--    <appender-ref ref="Console"/>-->
+        <!--    <appender-ref ref="RollingFileInfo"/>-->
+        <!--</AsyncLogger>-->
+        <AsyncRoot level="all" includeLocation="true">
+            <AppenderRef ref="RollingFile" />
+        </AsyncRoot>
     </loggers>
 </configuration>

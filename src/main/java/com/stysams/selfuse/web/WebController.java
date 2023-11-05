@@ -2,6 +2,7 @@ package com.stysams.selfuse.web;
 
 import com.stysams.selfuse.web.config.CookieManager;
 import lombok.SneakyThrows;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ public class WebController {
 
     @GetMapping("sout")
     public void sout(String content){
+        MDC.put("traceId", "1234567890");
         System.out.println(content);
     }
 
